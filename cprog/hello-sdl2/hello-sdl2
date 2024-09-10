@@ -1,0 +1,42 @@
+// Write a sdl2 program in C that creates a window and draws a red rectangle in it.
+// The window should be 640x480 pixels in size.
+// The rectangle should be 50x50 pixels in size.
+
+#include <SDL2/SDL.h>
+#include <stdio.h>
+
+int main(int argc, char* argv[])
+{
+    SDL_Window* window = NULL;
+    SDL_Renderer* renderer = NULL;
+    SDL_Rect rect = {295, 215, 50, 50};
+
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+    } else {
+        window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_SHOWN);
+        if (window == NULL) {
+            printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+        } else {
+            renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+            if (renderer == NULL) {
+                printf("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
+            } else {
+                SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+                SDL_RenderClear(renderer);
+
+                SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 0xFF);
+                SDL_RenderFillRect(renderer, &rect);
+
+                SDL_RenderPresent(renderer);
+                SDL_Delay(2000);
+            }
+        }
+    }
+
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+
+    return 0;
+}
