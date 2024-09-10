@@ -31,7 +31,7 @@ You now have a Linux shell on your R36S!
 
 SSH standands for "Secure SHell" and it is as standard way for unix-like systems to communicate. Once you have turned on the "remote service" option, your R36S is running the SSH daemon, and is ready for remote connections from any ssh client.
 
-There are a large veriety of ssh clients available for different systems. Though in principle it is possible to connect a keyboard to the R36S and program it directly, it is much more convienient to use a "real computer" with a keyboard and connect by ssh. There are lots of ssh clients and tools that for various operating systems. 
+There are a large veriety of ssh clients available for different systems. Though in principle it is possible to connect a keyboard to the R36S and program it directly, it is much more convienient to use a "real computer" with a keyboard and connect by ssh. 
 
 Here is a list of some of them:
 
@@ -67,7 +67,7 @@ scp hello-sdl2.c r36s:git/r36s-programming/cprog/hello-sdl2/
 
 # Git
 
-git is a version control system. It is not strictly necessary for programming the R36S, but you do not want to work without it. It will allow you to backup and do source control of the program that you develop, and will also provide a convenient way of syncing the programs that you develop, between your R36S system and yor desktop.
+git is a version control system. It is not strictly necessary for programming the R36S, but you do not want to work without it. It will allow you to backup and do source control of the program that you develop, and will also provide a convenient way of syncing the programs that you develop, between your R36S system and your desktop.
 
 # Preparing the system
 
@@ -129,10 +129,10 @@ If we now rerun ./hello-sdl2, we get only our colorful SDL on the screen:
 
 Even though the R36S is using a standard SDL, there are a few specifics that you need to be aware of:
 
-1. The screen is 640x480 pixels. This is the only resolution that you can use.
+1. The screen is 640×480 pixels. This is the only resolution that you can use.
 2. All the input controls are mapped as joystick buttons and axes. You can read the state of the joystick by the standard SDL2 joystick functions. In order to use the joystick you need to open it as follows in C:
 
-```
+```c
 	// Initialize SDL before everything else, so other SDL libraries can be safely initialized
 	if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_JOYSTICK ) < 0 ) {
 		printf("Error : failed to initialize SDL (%s).\n", SDL_GetError());
@@ -157,7 +157,7 @@ Even though the R36S is using a standard SDL, there are a few specifics that you
 
 Once this is done, you can read the state of the joystick by the standard SDL2 joystick functions:
 
-```
+```c
 	while (SDL_PollEvent(&Event)) {
         switch (Event.type) {
             case SDL_JOYAXISMOTION:
@@ -206,7 +206,14 @@ The axes are mapped as follows:
 | 2        | Right joystick - Left-Right motion |
 | 3        | Right joystick - Up-Down motion    |
 
-The program `print-joystick` will print the axes and buttons of the joystick to the console.
+To test this on your own, you can run the program `print-joystick`:
+
+```sh
+cd cprog/print-joystick
+mkdir build && cd build && cmake -GNinja ..
+ninja
+./print-joystick
+```
 
 Press Fn+Start to exit the program.
 
