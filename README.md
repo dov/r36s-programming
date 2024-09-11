@@ -2,7 +2,7 @@
 
 Dov Grobgeld
 <dov.grobgeld@gmail.com>
-Last edited: 2024-09-10 Tue
+Last edited: 2024-09-11 Wed
 
 # License
 
@@ -133,46 +133,46 @@ Even though the R36S is using a standard SDL, there are a few specifics that you
 2. All the input controls are mapped as joystick buttons and axes. You can read the state of the joystick by the standard SDL2 joystick functions. In order to use the joystick you need to open it as follows in C:
 
 ```c
-	// Initialize SDL before everything else, so other SDL libraries can be safely initialized
-	if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_JOYSTICK ) < 0 ) {
-		printf("Error : failed to initialize SDL (%s).\n", SDL_GetError());
-		return EXIT_FAILURE;
-	}
+// Initialize SDL before everything else, so other SDL libraries can be safely initialized
+if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_JOYSTICK ) < 0 ) {
+	printf("Error : failed to initialize SDL (%s).\n", SDL_GetError());
+	return EXIT_FAILURE;
+}
 
-	// Check for joysticks
-	if (SDL_NumJoysticks() < 1) {
-		printf( "Warning: No joysticks connected!\n" );
+// Check for joysticks
+if (SDL_NumJoysticks() < 1) {
+	printf( "Warning: No joysticks connected!\n" );
+	return EXIT_FAILURE;
+}
+else {
+	// Load joystick
+	gGameController = SDL_JoystickOpen( 0 );
+	if (gGameController == NULL) {
+		printf( "Warning: Unable to open game controller! SDL Error: %s\n", SDL_GetError() );
 		return EXIT_FAILURE;
 	}
-	else {
-		// Load joystick
-		gGameController = SDL_JoystickOpen( 0 );
-		if (gGameController == NULL) {
-			printf( "Warning: Unable to open game controller! SDL Error: %s\n", SDL_GetError() );
-			return EXIT_FAILURE;
-		}
-	}
+}
 
 ```
 
 Once this is done, you can read the state of the joystick by the standard SDL2 joystick functions:
 
 ```c
-	while (SDL_PollEvent(&Event)) {
-        switch (Event.type) {
-            case SDL_JOYAXISMOTION:
-                printf("axis = %d value = %d\n", 
-                       Event.jaxis.axis, Event.jaxis.value);
-                // Handle Joystick Motion
-                break;
-            case SDL_JOYBUTTONDOWN:
-                printf("JoyButtonDown %d\n", Event.jbutton.button);
-                break;
-            case SDL_JOYBUTTONUP:
-                printf("JoyButtonUp %d\n", Event.jbutton.button);
-                break;
-        }
+while (SDL_PollEvent(&Event)) {
+    switch (Event.type) {
+        case SDL_JOYAXISMOTION:
+            printf("axis = %d value = %d\n", 
+                   Event.jaxis.axis, Event.jaxis.value);
+            // Handle Joystick Motion
+            break;
+        case SDL_JOYBUTTONDOWN:
+            printf("JoyButtonDown %d\n", Event.jbutton.button);
+            break;
+        case SDL_JOYBUTTONUP:
+            printf("JoyButtonUp %d\n", Event.jbutton.button);
+            break;
     }
+}
 ```
 
 # Mapping of the R36S controls
@@ -224,7 +224,7 @@ It is possible to setup EmulationStation to support our native games. This is do
 * `/etc/emulationstation/es_systems.cfg` - This file contains a list of our "emulators". We will add a new system "native" to this file.
 * `/etc/emulationstation/themes/es-theme-nes-box/` - Contains themes for the various emulators. We want to add a theme for our "native" system. If you are using another theme, you will want to modify the destination.
 
-To simplify this, enter the `scripts` sub directery of this repository and run the script `install-native-emulator.sh` as follows:
+To simplify this, enter the `scripts` sub directery of this repository and run the script `install-native-emulator.py` as follows:
 
 ```
 cd ~/git/r36-programming/scripts
@@ -244,6 +244,12 @@ And if you enter it, you will see the c++ sdl program listed as a "game".
 ## Note about theme
 
 The "native" theme images were created by me and are free to use and copy.
+
+## Installing files in native roms directory
+
+To install additional programs in native, you need to copy them to your roms directory, either `/roms/native` or `/roms2/native`. In addition, you must give it the extension `.exec`. On Linux, the extension of a binary doesn't have any meaning, as the properties are determined inside the file through the first few bytes of the file, also known as a "magic number". However, EmulationStation needs an adentifier for its "Roms", and I chose the `.exec` extension. 
+
+EmulationStation will pick up your binaries next time you restart it. Either by rebooting the system, or by Option→Quit→Restart Emulation System.
 
 # Final thoughts
 

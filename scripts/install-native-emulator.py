@@ -70,7 +70,7 @@ def create_roms_directory(roms_dir):
     roms_dir = Path(roms_dir)
     if not roms_dir.exists():
         roms_dir.mkdir(0o755)
-    os.system(f'rsync -av ../binaries/*.xec {roms_dir}')
+    os.system(f'rsync -av ../roms/native {roms_dir}')
     
 
 if __name__ == '__main__':
