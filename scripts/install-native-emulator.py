@@ -35,7 +35,7 @@ def insert_native_system(filename, roms_dir='/roms'):
     <name>Native</name>
     <fullname>Native</fullname>
     <path>{roms_dir}/native/</path>
-    <extension>.exec .run .py</extension>
+    <extension>.exec .run .py .lua</extension>
     <command>/roms2/native/run.sh %ROM%</command>
     <platform>native</platform>
     <theme>native</theme>

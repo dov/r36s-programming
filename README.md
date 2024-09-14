@@ -227,7 +227,7 @@ It is possible to setup EmulationStation to support our native games. This is do
 To simplify this, enter the `scripts` sub directery of this repository and run the script `install-native-emulator.py` as follows:
 
 ```
-cd ~/git/r36-programming/scripts
+cd ~/git/r36s-programming/scripts
 python3 install-native-emulator.py
 ```
 
@@ -250,6 +250,31 @@ The "native" theme images were created by me and are free to use and copy.
 To install additional programs in native, you need to copy them to your roms directory, either `/roms/native` or `/roms2/native`. In addition, you must give it the extension `.exec`. On Linux, the extension of a binary doesn't have any meaning, as the properties are determined inside the file through the first few bytes of the file, also known as a "magic number". However, EmulationStation needs an adentifier for its "Roms", and I chose the `.exec` extension. 
 
 EmulationStation will pick up your binaries next time you restart it. Either by rebooting the system, or by Option→Quit→Restart Emulation System.
+
+# Other languages
+
+Besides C++ I have also tested python and lua verified that they work just as well with SDL2. I will expand this tutorial examples for these languages. But as I wrote above, it is standard SDL. All you need to do is to make sure that you are using the correct resolution and setup the joystick.
+
+## LUA Setup
+
+```sh
+sudo apt install lua5.3 lua5.3-dev
+sudo apt install luarocks
+sudo apt-get install libsdl2-mixer-dev libsdl2-image-dev libsdl2-net-dev
+sudo luarocks install lua-sdl2  
+cd ~/git
+git clone https://github.com/Tangent128/luasdl2
+cd ~/git/luasdl2/tutorials/07-bouncing
+lua tutorial.lua
+```
+
+## Python3 setup
+
+```sh
+python3 -m pip install pysdl2 pysdl2-dll
+```
+
+Note however that I get a warning about "source-only" when running a python sdl2 program. I'm not sure what this warning means.
 
 # Final thoughts
 
