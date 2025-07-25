@@ -13,13 +13,21 @@ import argparse
 import re
 from pathlib import Path
 import os
+from sys import argv
+
+# SCRIPT_DIR must prepended to relative paths to allow this script
+# to be executed at any working directory.
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def find_roms_dir():
     '''Look for the rom files'''
     for candidate in ['/roms2',
                       '/roms']:
-        if Path(candidate).exists():
+
+        # find the roms dir that exists and is writable
+        if Path(candidate).exists() and os.access(candidate, os.W_OK):
             return candidate
+
     raise RuntimeError('Failed finding rom directory')
 
 def insert_native_system(filename, roms_dir='/roms'):
@@ -36,7 +44,7 @@ def insert_native_system(filename, roms_dir='/roms'):
     <fullname>Native</fullname>
     <path>{roms_dir}/native/</path>
     <extension>.exec .run .py .lua</extension>
-    <command>/roms2/native/run.sh %ROM%</command>
+    <command>/{roms_dir}/native/run.sh %ROM%</command>
     <platform>native</platform>
     <theme>native</theme>
   </system>
@@ -70,7 +78,7 @@ def create_roms_directory(roms_dir):
     roms_dir = Path(roms_dir)
     if not roms_dir.exists():
         roms_dir.mkdir(0o755)
-    os.system(f'rsync -av ../roms/native {roms_dir}')
+    os.system(f'rsync -av {SCRIPT_DIR}/../roms/native {roms_dir}')
     
 
 if __name__ == '__main__':
@@ -91,7 +99,7 @@ if __name__ == '__main__':
                         dest='theme_source_dir',
                         action='store',
                         type=str,
-                        default='../themes/native',
+                        default=f'{SCRIPT_DIR}/../themes/native',
                         help='Where is the theme')
     parser.add_argument('--theme-dest-dir',
                         dest='theme_dest_dir',
@@ -117,6 +125,10 @@ if __name__ == '__main__':
 
     if roms_dir is None:
         roms_dir = find_roms_dir()
+
+    if roms_dir is not None:
+        print(f'Found roms directory: {roms_dir}')
+        create_roms_directory(roms_dir)
 
     if insert_native_system(cfg_file, roms_dir=roms_dir):
         print(f'Succesfully modified {cfg_file}')
